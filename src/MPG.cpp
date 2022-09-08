@@ -278,7 +278,7 @@ GamepadHotkey MPG::hotkey()
 
 void MPG::process()
 {
-	state.dpad = runSOCDCleaner(options.socdMode, state.dpad);
+	state.dpad = runSOCDCleaner(options.xAxisSocdMode, options.yAxisSocdMode, state.dpad);
 
 	switch (options.dpadMode)
 	{
