@@ -95,6 +95,8 @@ class MPG
 		 */
 		virtual void process();
 
+		CARDINAL_SOCDMode cycleSocdMode(CARDINAL_SOCDMode currentMode);
+
 		/**
 		 * @brief Generate USB report for the current input mode.
 		 *

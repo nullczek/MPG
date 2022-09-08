@@ -197,6 +197,34 @@ XInputReport *MPG::getXInputReport()
 	return &xinputReport;
 }
 
+ CARDINAL_SOCDMode cycleSocdMode(CARDINAL_SOCDMode currentMode)
+ {
+	uint counter = 1;
+	bool matched = false;
+	CARDINAL_SOCDMode firstMode = *CARDINAL_SOCDMode_List.begin();
+	for (auto mode : CARDINAL_SOCDMode_List)
+	{
+		if (matched)
+		{
+			return mode;
+		}
+		else if (mode == currentMode)
+		{
+				if (counter == CARDINAL_SOCDMode_List.size())
+				{
+					return firstMode;
+				}
+				else
+				{
+					matched = true;
+				}
+		}
+
+		counter++;
+	}
+
+	return firstMode;
+}
 
 GamepadHotkey MPG::hotkey()
 {
@@ -241,15 +269,15 @@ GamepadHotkey MPG::hotkey()
 		switch (state.dpad & GAMEPAD_MASK_DPAD)
 		{
 			case GAMEPAD_MASK_DOWN:
-				action = HOTKEY_SOCD_NEUTRAL;
-				options.socdMode = SOCD_MODE_NEUTRAL;
+				action = HOTKEY_X_AXIS_SOCD_CYCLE;
+				options.xAxisSocdMode = cycleSocdMode(options.xAxisSocdMode);
 				state.dpad = 0;
 				state.buttons &= ~(f2Mask);
 				break;
 
 			case GAMEPAD_MASK_UP:
-				action = HOTKEY_SOCD_UP_PRIORITY;
-				options.socdMode = SOCD_MODE_UP_PRIORITY;
+				action = HOTKEY_Y_AXIS_SOCD_CYCLE;
+				options.yAxisSocdMode = cycleSocdMode(options.yAxisSocdMode);
 				state.dpad = 0;
 				state.buttons &= ~(f2Mask);
 				break;
@@ -274,7 +302,6 @@ GamepadHotkey MPG::hotkey()
 	lastAction = action;
 	return action;
 }
-
 
 void MPG::process()
 {

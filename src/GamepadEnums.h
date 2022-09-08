@@ -4,6 +4,7 @@
  */
 
 #pragma once
+#include <initializer_list>
 
 // The available input modes
 // TODO: Think about making enums "class enum" instead. This will keep them out of the global namespace
@@ -42,6 +43,16 @@ typedef enum
 	SOCD_MODE_CARDINAL_MIN_PRIORITY,           // U+D=U, L+R=N
 	SOCD_MODE_CARDINAL_MAX_PRIORITY,         // U+D=U, L+R=N
 } CARDINAL_SOCDMode;
+
+static const auto CARDINAL_SOCDMode_List =
+{
+    SOCD_MODE_NONE,
+    SOCD_MODE_NEUTRAL_PRIORITY,
+    SOCD_MODE_LAST_INPUT_PRIORITY,
+    SOCD_MODE_FIRST_INPUT_PRIORITY,
+    SOCD_MODE_CARDINAL_MIN_PRIORITY,
+		SOCD_MODE_CARDINAL_MAX_PRIORITY,
+};
 
 // Enum for tracking last direction state of Second Input SOCD method
 typedef enum
