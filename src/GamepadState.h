@@ -212,3 +212,161 @@ inline uint8_t runSOCDCleaner(SOCDMode mode, uint8_t dpad)
 
 	return newDpad;
 }
+
+/**
+ * @brief Run SOCD cleaning against a D-pad value.
+ *
+ * @param mode The SOCD cleaning mode.
+ * @param dpad The GamepadState.dpad value.
+ * @return uint8_t The clean D-pad value.
+ */
+inline uint8_t runSOCDCleaner(CARDINAL_SOCDMode xAxisMode, CARDINAL_SOCDMode yAxisMode, uint8_t dpad)
+{
+	static DpadDirection lastUD = DIRECTION_NONE;
+	static DpadDirection lastLR = DIRECTION_NONE;
+	uint8_t newDpad = 0;
+	uint8_t currentDpadXAxis = dpad & (GAMEPAD_MASK_LEFT | GAMEPAD_MASK_RIGHT);
+	uint8_t currentDpadYAxis = dpad & (GAMEPAD_MASK_UP | GAMEPAD_MASK_DOWN);
+
+
+	if (yAxisMode == CARDINAL_SOCDMode::SOCD_MODE_NONE)
+	{
+		switch (currentDpadYAxis)
+		{
+			case (GAMEPAD_MASK_UP | GAMEPAD_MASK_DOWN):
+				newDpad |= GAMEPAD_MASK_UP | GAMEPAD_MASK_DOWN;
+				lastUD = DIRECTION_BOTH;
+				break;
+
+			case GAMEPAD_MASK_UP:
+				newDpad |= GAMEPAD_MASK_UP;
+				lastUD = DIRECTION_UP;
+				break;
+
+			case GAMEPAD_MASK_DOWN:
+				newDpad |= GAMEPAD_MASK_DOWN;
+				lastUD = DIRECTION_DOWN;
+				break;
+
+			default:
+				lastUD = DIRECTION_NONE;
+				break;
+		}
+	}
+	else
+	{
+		switch (currentDpadYAxis)
+		{
+		case (GAMEPAD_MASK_UP | GAMEPAD_MASK_DOWN):
+			if (yAxisMode == CARDINAL_SOCDMode::SOCD_MODE_NEUTRAL_PRIORITY)
+			{
+				lastUD = DIRECTION_NONE;
+			}
+			else if (yAxisMode == CARDINAL_SOCDMode::SOCD_MODE_CARDINAL_MAX_PRIORITY)
+			{
+				newDpad |= GAMEPAD_MASK_UP;
+				lastUD = DIRECTION_UP;
+			}
+			else if (yAxisMode == CARDINAL_SOCDMode::SOCD_MODE_CARDINAL_MIN_PRIORITY)
+			{
+				newDpad |= GAMEPAD_MASK_DOWN;
+				lastUD = DIRECTION_DOWN;
+			}
+			else if (yAxisMode == CARDINAL_SOCDMode::SOCD_MODE_FIRST_INPUT_PRIORITY)
+			{
+				// todo why isn't iastUD set here
+				newDpad |= (lastUD == DIRECTION_UP) ? GAMEPAD_MASK_UP : GAMEPAD_MASK_DOWN;
+			}
+			else if (yAxisMode == CARDINAL_SOCDMode::SOCD_MODE_LAST_INPUT_PRIORITY)
+				newDpad |= (lastUD == DIRECTION_UP) ? GAMEPAD_MASK_DOWN : GAMEPAD_MASK_UP;
+			else
+				lastUD = DIRECTION_NONE;
+			break;
+
+		case GAMEPAD_MASK_UP:
+			newDpad |= GAMEPAD_MASK_UP;
+			lastUD = DIRECTION_UP;
+			break;
+
+		case GAMEPAD_MASK_DOWN:
+			newDpad |= GAMEPAD_MASK_DOWN;
+			lastUD = DIRECTION_DOWN;
+			break;
+
+		default:
+			lastUD = DIRECTION_NONE;
+			break;
+		}
+	}
+
+	if (xAxisMode == CARDINAL_SOCDMode::SOCD_MODE_NONE)
+	{
+		switch (currentDpadXAxis)
+		{
+			case (GAMEPAD_MASK_LEFT | GAMEPAD_MASK_RIGHT):
+				newDpad |= GAMEPAD_MASK_LEFT | GAMEPAD_MASK_RIGHT;
+				lastLR = DIRECTION_BOTH;
+				break;
+
+			case GAMEPAD_MASK_LEFT:
+				newDpad |= GAMEPAD_MASK_LEFT;
+				lastLR = DIRECTION_LEFT;
+				break;
+
+			case GAMEPAD_MASK_RIGHT:
+				newDpad |= GAMEPAD_MASK_RIGHT;
+				lastLR = DIRECTION_RIGHT;
+				break;
+
+			default:
+				lastLR = DIRECTION_NONE;
+				break;
+		}
+	}
+	else
+	{
+		switch (currentDpadXAxis)
+		{
+			case (GAMEPAD_MASK_LEFT | GAMEPAD_MASK_RIGHT):
+				if (xAxisMode == CARDINAL_SOCDMode::SOCD_MODE_NEUTRAL_PRIORITY)
+				{
+					lastLR = DIRECTION_NONE;
+				}
+				else if (xAxisMode == CARDINAL_SOCDMode::SOCD_MODE_CARDINAL_MAX_PRIORITY)
+				{
+					newDpad |= GAMEPAD_MASK_RIGHT;
+					lastLR = DIRECTION_RIGHT;
+				}
+				else if (xAxisMode == CARDINAL_SOCDMode::SOCD_MODE_CARDINAL_MIN_PRIORITY)
+				{
+					newDpad |= GAMEPAD_MASK_LEFT;
+					lastLR = DIRECTION_LEFT;
+				}
+				else if (xAxisMode == CARDINAL_SOCDMode::SOCD_MODE_FIRST_INPUT_PRIORITY)
+				{
+					// todo why isn't iastUD set here
+					newDpad |= (lastLR == DIRECTION_LEFT) ? GAMEPAD_MASK_LEFT : GAMEPAD_MASK_RIGHT;
+				}
+				else if (xAxisMode == CARDINAL_SOCDMode::SOCD_MODE_LAST_INPUT_PRIORITY)
+					newDpad |= (lastLR == DIRECTION_LEFT) ? GAMEPAD_MASK_RIGHT : GAMEPAD_MASK_LEFT;
+				else
+					lastLR = DIRECTION_NONE;
+				break;
+
+			case GAMEPAD_MASK_LEFT:
+				newDpad |= GAMEPAD_MASK_LEFT;
+				lastLR = DIRECTION_LEFT;
+				break;
+
+			case GAMEPAD_MASK_RIGHT:
+				newDpad |= GAMEPAD_MASK_RIGHT;
+				lastLR = DIRECTION_RIGHT;
+				break;
+
+			default:
+				lastLR = DIRECTION_NONE;
+				break;
+		}
+	}
+	return newDpad;
+}
