@@ -312,9 +312,8 @@ GamepadHotkey MPG::hotkey()
 
 			case GAMEPAD_MASK_UP:
 				if (lastAction != HOTKEY_Y_AXIS_SOCD_CYCLE)
-					options.xAxisSocdMode = cycleSocdMode(options.xAxisSocdMode);
+					options.yAxisSocdMode = cycleSocdMode(options.yAxisSocdMode);
 				action = HOTKEY_Y_AXIS_SOCD_CYCLE;
-				options.yAxisSocdMode = cycleSocdMode(options.yAxisSocdMode);
 				state.dpad = 0;
 				state.buttons &= ~(f3Mask);
 				break;
