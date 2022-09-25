@@ -24,6 +24,7 @@ class MPG
 			: debounceMS(debounceMS)
 			, f1Mask((GAMEPAD_MASK_S1 | GAMEPAD_MASK_S2))
 			, f2Mask((GAMEPAD_MASK_L3 | GAMEPAD_MASK_R3))
+			, f3Mask((GAMEPAD_MASK_S1 | GAMEPAD_MASK_R3))
 			, debouncer(debounceMS)
 		{
 		}
@@ -42,6 +43,11 @@ class MPG
 		 * @brief The input mask for the F2 button
 		 */
 		uint16_t f2Mask;
+
+		/**
+		 * @brief The input mask for the F3 button
+		 */
+		uint16_t f3Mask;
 
 		/**
 		 * @brief The current D-pad mode.
@@ -162,7 +168,7 @@ class MPG
 		inline bool __attribute__((always_inline)) pressedA2()    { return pressedButton(GAMEPAD_MASK_A2); }
 		inline bool __attribute__((always_inline)) pressedF1()    { return pressedButton(f1Mask); }
 		inline bool __attribute__((always_inline)) pressedF2()    { return pressedButton(f2Mask); }
-
+		inline bool __attribute__((always_inline)) pressedF3()    { return pressedButton(f3Mask); }
 	protected:
 		/**
 		 * @brief Button debouncer instance.

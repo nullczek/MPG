@@ -269,15 +269,15 @@ GamepadHotkey MPG::hotkey()
 		switch (state.dpad & GAMEPAD_MASK_DPAD)
 		{
 			case GAMEPAD_MASK_DOWN:
-				action = HOTKEY_X_AXIS_SOCD_CYCLE;
-				options.xAxisSocdMode = cycleSocdMode(options.xAxisSocdMode);
+				action = HOTKEY_SOCD_NEUTRAL;
+				options.socdMode = SOCD_MODE_NEUTRAL;
 				state.dpad = 0;
 				state.buttons &= ~(f2Mask);
 				break;
 
 			case GAMEPAD_MASK_UP:
-				action = HOTKEY_Y_AXIS_SOCD_CYCLE;
-				options.yAxisSocdMode = cycleSocdMode(options.yAxisSocdMode);
+				action = HOTKEY_SOCD_UP_PRIORITY;
+				options.socdMode = SOCD_MODE_UP_PRIORITY;
 				state.dpad = 0;
 				state.buttons &= ~(f2Mask);
 				break;
@@ -298,14 +298,42 @@ GamepadHotkey MPG::hotkey()
 				break;
 		}
 	}
+	else if (pressedF3())
+	{
+		switch (state.dpad & GAMEPAD_MASK_DPAD)
+		{
+			case GAMEPAD_MASK_RIGHT:
+				if (lastAction != HOTKEY_X_AXIS_SOCD_CYCLE)
+					options.xAxisSocdMode = cycleSocdMode(options.xAxisSocdMode);
+				action = HOTKEY_X_AXIS_SOCD_CYCLE;
+				state.dpad = 0;
+				state.buttons &= ~(f3Mask);
+				break;
+
+			case GAMEPAD_MASK_UP:
+				if (lastAction != HOTKEY_Y_AXIS_SOCD_CYCLE)
+					options.xAxisSocdMode = cycleSocdMode(options.xAxisSocdMode);
+				action = HOTKEY_Y_AXIS_SOCD_CYCLE;
+				options.yAxisSocdMode = cycleSocdMode(options.yAxisSocdMode);
+				state.dpad = 0;
+				state.buttons &= ~(f3Mask);
+				break;
+		}
+	}
 
 	lastAction = action;
 	return action;
 }
 
+
 void MPG::process()
 {
+	#if defined(DEFAULT_SOCD_MODE_X_AXIS) && defined(DEFAULT_SOCD_MODE_X_AXIS)
 	state.dpad = runSOCDCleaner(options.xAxisSocdMode, options.yAxisSocdMode, state.dpad);
+	#else
+	state.dpad = runSOCDCleaner(options.socdMode, state.dpad);
+	#endif
+
 
 	switch (options.dpadMode)
 	{
