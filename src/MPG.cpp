@@ -197,7 +197,7 @@ XInputReport *MPG::getXInputReport()
 	return &xinputReport;
 }
 
- CARDINAL_SOCDMode cycleSocdMode(CARDINAL_SOCDMode currentMode)
+ CARDINAL_SOCDMode MPG::cycleSocdMode(CARDINAL_SOCDMode currentMode)
  {
 	uint counter = 1;
 	bool matched = false;

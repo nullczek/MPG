@@ -101,6 +101,9 @@ class MPG
 		 */
 		virtual void process();
 
+		/**
+		 * @brief Cycle to next value in the enum based on current value, looping back to first value
+		 */
 		CARDINAL_SOCDMode cycleSocdMode(CARDINAL_SOCDMode currentMode);
 
 		/**
