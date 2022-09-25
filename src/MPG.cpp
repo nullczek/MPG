@@ -327,12 +327,14 @@ GamepadHotkey MPG::hotkey()
 
 void MPG::process()
 {
-	#if defined(DEFAULT_SOCD_MODE_X_AXIS) && defined(DEFAULT_SOCD_MODE_X_AXIS)
-	state.dpad = runSOCDCleaner(options.xAxisSocdMode, options.yAxisSocdMode, state.dpad);
-	#else
-	state.dpad = runSOCDCleaner(options.socdMode, state.dpad);
-	#endif
+	// todo figure out better way to handle legacy via option
+	// #if defined(DEFAULT_SOCD_MODE_X_AXIS) && defined(DEFAULT_SOCD_MODE_X_AXIS)
+	// state.dpad = runSOCDCleaner(options.xAxisSocdMode, options.yAxisSocdMode, state.dpad);
+	// #else
+	// state.dpad = runSOCDCleaner(options.socdMode, state.dpad);
+	// #endif
 
+	state.dpad = runSOCDCleaner(options.xAxisSocdMode, options.yAxisSocdMode, state.dpad);
 
 	switch (options.dpadMode)
 	{
