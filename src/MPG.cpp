@@ -271,6 +271,8 @@ GamepadHotkey MPG::hotkey()
 			case GAMEPAD_MASK_DOWN:
 				action = HOTKEY_SOCD_NEUTRAL;
 				options.socdMode = SOCD_MODE_NEUTRAL;
+				options.setXAxisSocdMode(CARDINAL_SOCDMode::SOCD_MODE_NEUTRAL_PRIORITY);
+				options.setYAxisSocdMode(CARDINAL_SOCDMode::SOCD_MODE_NEUTRAL_PRIORITY);
 				state.dpad = 0;
 				state.buttons &= ~(f2Mask);
 				break;
@@ -278,6 +280,8 @@ GamepadHotkey MPG::hotkey()
 			case GAMEPAD_MASK_UP:
 				action = HOTKEY_SOCD_UP_PRIORITY;
 				options.socdMode = SOCD_MODE_UP_PRIORITY;
+				options.setXAxisSocdMode(CARDINAL_SOCDMode::SOCD_MODE_NEUTRAL_PRIORITY);
+				options.setYAxisSocdMode(CARDINAL_SOCDMode::SOCD_MODE_CARDINAL_MAX_PRIORITY);
 				state.dpad = 0;
 				state.buttons &= ~(f2Mask);
 				break;
@@ -285,6 +289,8 @@ GamepadHotkey MPG::hotkey()
 			case GAMEPAD_MASK_LEFT:
 				action = HOTKEY_SOCD_LAST_INPUT;
 				options.socdMode = SOCD_MODE_SECOND_INPUT_PRIORITY;
+				options.setXAxisSocdMode(CARDINAL_SOCDMode::SOCD_MODE_LAST_INPUT_PRIORITY);
+				options.setYAxisSocdMode(CARDINAL_SOCDMode::SOCD_MODE_LAST_INPUT_PRIORITY);
 				state.dpad = 0;
 				state.buttons &= ~(f2Mask);
 				break;
@@ -304,7 +310,7 @@ GamepadHotkey MPG::hotkey()
 		{
 			case GAMEPAD_MASK_RIGHT:
 				if (lastAction != HOTKEY_X_AXIS_SOCD_CYCLE)
-					options.xAxisSocdMode = cycleSocdMode(options.xAxisSocdMode);
+					options.setXAxisSocdMode(cycleSocdMode(options.getXAxisSocdMode()));
 				action = HOTKEY_X_AXIS_SOCD_CYCLE;
 				state.dpad = 0;
 				state.buttons &= ~(f3Mask);
@@ -312,7 +318,7 @@ GamepadHotkey MPG::hotkey()
 
 			case GAMEPAD_MASK_UP:
 				if (lastAction != HOTKEY_Y_AXIS_SOCD_CYCLE)
-					options.yAxisSocdMode = cycleSocdMode(options.yAxisSocdMode);
+					options.setYAxisSocdMode(cycleSocdMode(options.getYAxisSocdMode()));
 				action = HOTKEY_Y_AXIS_SOCD_CYCLE;
 				state.dpad = 0;
 				state.buttons &= ~(f3Mask);
@@ -334,7 +340,7 @@ void MPG::process()
 	// state.dpad = runSOCDCleaner(options.socdMode, state.dpad);
 	// #endif
 
-	state.dpad = runSOCDCleaner(options.xAxisSocdMode, options.yAxisSocdMode, state.dpad);
+	state.dpad = runSOCDCleaner(options.getXAxisSocdMode(), options.getYAxisSocdMode(), state.dpad);
 
 	switch (options.dpadMode)
 	{
