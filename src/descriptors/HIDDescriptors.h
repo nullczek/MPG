@@ -28,12 +28,12 @@
 #define HID_MASK_L1       (1U <<  4)
 #define HID_MASK_R1       (1U <<  5)
 #define HID_MASK_L2       (1U <<  6)
-#define HID_MASK_R2       (1U <<  7)
+#define HID_MASK_R2       (1U <<  12)
 #define HID_MASK_SELECT   (1U <<  8)
 #define HID_MASK_START    (1U <<  9)
 #define HID_MASK_L3       (1U << 10)
 #define HID_MASK_R3       (1U << 11)
-#define HID_MASK_PS       (1U << 12)
+#define HID_MASK_PS       (1 << 7)
 #define HID_MASK_TP       (1U << 13)
 
 // Switch analog sticks only report 8 bits
